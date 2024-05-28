@@ -1,0 +1,16 @@
+{
+  "name": "bun-ffmpeg",
+  "version": "0.0.1",
+  "description": "API to FFMPEG (http://www.ffmpeg.org)",
+  "keywords": [
+    "ffmpeg",
+    "bun"
+  ],
+  "license": "MIT",
+  "bugs": {
+    "mail": "kenjiginjo@gmail.com",
+    "url": "https://github.com/KenjiGinjo/bun-ffmpeg/issues"
+  },
+  "repository": "git://github.com/KenjiGinjo/bun-ffmpeg.git",
+  "main": "index"
+}
