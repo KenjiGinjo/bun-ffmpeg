@@ -12,5 +12,8 @@
     "url": "https://github.com/KenjiGinjo/bun-ffmpeg/issues"
   },
   "repository": "git://github.com/KenjiGinjo/bun-ffmpeg.git",
-  "main": "index"
+  "main": "/src/index",
+  "devDependencies": {
+    "@types/bun": "^1.1.3"
+  }
 }
