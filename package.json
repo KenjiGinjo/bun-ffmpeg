@@ -13,7 +13,12 @@
   },
   "repository": "git://github.com/KenjiGinjo/bun-ffmpeg.git",
   "main": "/src/index",
+  "scripts": {
+    "test": "bun test",
+    "typecheck": "tsc --noEmit"
+  },
   "devDependencies": {
-    "@types/bun": "^1.1.3"
+    "@types/bun": "^1.1.3",
+    "typescript": "^5.4.5"
   }
 }
