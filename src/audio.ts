@@ -1,47 +1,65 @@
 import { _spawn } from "./_base";
+import { audioArgs } from "./audio-args";
+import type {
+  FfmpegAudioOptions,
+  FfmpegAudioOptionsWithStreamOut,
+} from "./types";
 
-interface FfmpegAudioOptions {
-  codec?: "aac" | "mp3" | "pcm_s16le";
-  bitrate?: string | number;
-  channels?: 1 | 2 | 5.1 | 7.1;
-  frequency?: 8000 | 16000 | 44100 | 48000;
-  quality?: number;
-  onError?: (error: unknown) => void;
-}
-
-export const audioArgs = (input: string,
-  output: string, options?: FfmpegAudioOptions) => {
-
-  if (!options) {
-    return [
-      "-i", input,
-      "-y", output
-    ];
-  }
-
-  const { codec, bitrate, channels, frequency, quality } = options;
-
-  return [
-    "-i", input,
-    ...(codec ? ["-acodec", codec] : []),
-    ...(bitrate ? ["-b:a", ("" + bitrate).replace(/k?$/, "k")] : []),
-    ...(channels ? ["-ac", "" + channels] : []),
-    ...(frequency ? ["-ar", "" + frequency] : []),
-    ...(quality ? ["-q:a", "" + quality] : []),
-    "-y", output
-  ];
-}
-
-export const FfmpegAudio = async (
+export const audio = async (
   input: string,
   output: string,
   options?: FfmpegAudioOptions
 ) => {
   try {
-    await _spawn(audioArgs(input, output, options));
+    await _spawn(["ffmpeg", "-i", input, ...audioArgs(options), "-y", output]);
   } catch (_) {
-    if (options && options.onError) {
-      options.onError(_);
-    }
+    options?.onError?.(_);
+  }
+};
+
+export const audioWithStreamInput = async (
+  input: ReadableStream<Uint8Array>,
+  output: string,
+  options?: FfmpegAudioOptions
+): Promise<void> => {
+  try {
+    await _spawn(
+      ["ffmpeg", "-i", "pipe:0", ...audioArgs(options), "-y", output],
+      input
+    );
+  } catch (_) {
+    options?.onError?.(_);
+  }
+};
+
+export const audioWithStreamOut = async (
+  input: string,
+  output: FfmpegAudioOptionsWithStreamOut,
+  options?: FfmpegAudioOptions
+): Promise<void> => {
+  try {
+    await _spawn(
+      ["ffmpeg", "-i", input, ...audioArgs(options), "-f", "wav", "pipe:1"],
+      undefined,
+      output
+    );
+  } catch (_) {
+    options?.onError?.(_);
+  }
+};
+
+export const audioWithStreamInputAndOut = async (
+  input: ReadableStream<Uint8Array>,
+  output: FfmpegAudioOptionsWithStreamOut,
+  options?: FfmpegAudioOptions
+): Promise<void> => {
+  try {
+    await _spawn(
+      ["ffmpeg", "-i", "pipe:0", ...audioArgs(options), "-f", "wav", "pipe:1"],
+      input,
+      output
+    );
+  } catch (_) {
+    options?.onError?.(_);
   }
 };
