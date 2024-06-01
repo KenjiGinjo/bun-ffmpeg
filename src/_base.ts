@@ -12,52 +12,56 @@ export const _spawn = async (
     stdout: 'pipe',
   });
 
-  if (input) {
+  const processInput = async () => {
+    if (!input) return;
     const reader = input.getReader();
-
-    async function readAndWrite() {
-      const { done, value } = await reader.read();
-      if (done) {
-        proc.stdin.end();
-        return;
+    try {
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) {
+          proc.stdin.end();
+          break;
+        }
+        proc.stdin.write(value);
+        proc.stdin.flush();
       }
-      proc.stdin.write(value);
-      proc.stdin.flush();
-      await readAndWrite();
+    } finally {
+      reader.releaseLock();
     }
+  };
 
-    await readAndWrite();
-  }
-
-  if (output) {
+  const processOutput = async () => {
+    if (!output) return;
     const reader = proc.stdout.getReader();
     const sink = new Bun.ArrayBufferSink();
+    sink.start({ asUint8Array: true });
 
-    sink.start({
-      asUint8Array: true,
-    });
-
-    async function readAndWriteOutput() {
-      const { done, value } = await reader.read();
-      if (done) {
-        const finalData = sink.end();
-        output?.onProcessDataEnd?.(finalData);
-        return;
+    try {
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) {
+          const finalData = sink.end();
+          output?.onProcessDataEnd?.(finalData);
+          break;
+        }
+        sink.write(value);
+        output?.onProcessDataFlushed?.(value);
       }
-
-      sink.write(value);
-      output?.onProcessDataFlushed?.(value);
-
-      await readAndWriteOutput();
+    } finally {
+      reader.releaseLock();
     }
+  };
 
-    await readAndWriteOutput();
-  }
+  try {
+    await Promise.all([processInput(), processOutput()]);
 
-  const exitCode = await proc.exited;
-  if (exitCode !== 0) {
-    const stderr = await Bun.readableStreamToText(proc.stderr);
-    const errors = extractError(stderr);
-    throw new Error(errors);
+    const exitCode = await proc.exited;
+    if (exitCode !== 0) {
+      const stderr = await Bun.readableStreamToText(proc.stderr);
+      const errors = extractError(stderr);
+      throw new Error(errors);
+    }
+  } catch (error) {
+    throw error;
   }
 };
