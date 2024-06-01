@@ -1,6 +1,7 @@
 {
   "extends": "codestilo-ts/bun.json",
   "compilerOptions": {
+    "moduleResolution": "Bundler",
     "paths": {
       "@/*": ["./src/*"]
     }
