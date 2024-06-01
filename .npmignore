@@ -6,6 +6,7 @@ node_modules
 bun.lockb
 eslint.config.js
 prettier.config.js
+*.test.ts
 
 
 
