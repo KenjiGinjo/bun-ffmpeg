@@ -15,7 +15,7 @@
   "type": "module",
   "main": "/src/index",
   "scripts": {
-    "format": "pretter --check ./src/**/*.ts",
+    "format": "prettier --check ./src/**/*.ts",
     "format:fix": "prettier --write ./src/**/*.ts",
     "lint": "eslint ./src/**/*.ts",
     "lint:fix": "eslint ./src/**/*.ts --fix",
