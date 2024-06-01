@@ -1,5 +1,5 @@
 export interface FfmpegAudioOptions {
-  codec?: "aac" | "mp3" | "pcm_s16le";
+  codec?: 'aac' | 'mp3' | 'pcm_s16le';
   /**
    * The bitrate for the audio encoding.
    * @example "192k"
@@ -11,7 +11,7 @@ export interface FfmpegAudioOptions {
   onError?: (error: unknown) => void;
 }
 export interface FfmpegAudioOptionsWithStreamOut {
-  onProcessDataFlushed: (data: any) => void;
+  onProcessDataFlushed: (data: Uint8Array | ArrayBuffer | undefined) => void;
   onProcessDataEnd: (data: Uint8Array | ArrayBuffer | undefined) => void;
 }
 export interface FfmpegAudioInfo {
