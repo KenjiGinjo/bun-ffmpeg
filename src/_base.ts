@@ -1,19 +1,19 @@
-import { extractError } from "./utils/extract-error";
-import type { FfmpegAudioOptionsWithStreamOut } from "./types";
+import type { FfmpegAudioOptionsWithStreamOut } from './types';
+import { extractError } from './utils/extract-error';
 
 export const _spawn = async (
   args: string[],
-  inputStream?: ReadableStream<Uint8Array>,
-  output?: FfmpegAudioOptionsWithStreamOut
+  input?: ReadableStream<Uint8Array>,
+  output?: FfmpegAudioOptionsWithStreamOut,
 ) => {
   const proc = Bun.spawn(args, {
-    stderr: "pipe",
-    stdin: "pipe",
-    stdout: "pipe",
+    stderr: 'pipe',
+    stdin: 'pipe',
+    stdout: 'pipe',
   });
 
-  if (inputStream) {
-    const reader = inputStream.getReader();
+  if (input) {
+    const reader = input.getReader();
 
     async function readAndWrite() {
       const { done, value } = await reader.read();
