@@ -1,6 +1,6 @@
 {
   "name": "bun-ffmpeg",
-  "version": "0.0.4",
+  "version": "0.0.6",
   "description": "API to FFMPEG (http://www.ffmpeg.org)",
   "keywords": [
     "ffmpeg",
@@ -10,7 +10,10 @@
     "url": "https://github.com/KenjiGinjo/bun-ffmpeg/issues",
     "mail": "kenjiginjo@gmail.com"
   },
-  "repository": "git://github.com/KenjiGinjo/bun-ffmpeg.git",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/KenjiGinjo/bun-ffmpeg.git"
+  },
   "license": "MIT",
   "type": "module",
   "exports": {
@@ -18,6 +21,7 @@
   },
   "files": [
     "src",
+    "!src/**/*.test.ts",
     "README.md",
     "LICENSE",
     "tsconfig.json"
