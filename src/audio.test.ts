@@ -38,8 +38,9 @@ describe('audio', () => {
       {
         codec: 'pcm_s16le',
         channels: 1,
-        sampleRate: 16000,
+        sampleRate: '16000',
         bitrate: '256000',
+        duration: '12.312000',
       },
     ]);
 
@@ -91,8 +92,9 @@ describe('audio', () => {
       {
         codec: 'pcm_s16le',
         channels: 1,
-        sampleRate: 16000,
+        sampleRate: '16000',
         bitrate: '256000',
+        duration: '12.312000',
       },
     ]);
 
@@ -131,8 +133,9 @@ describe('audio', () => {
       {
         codec: 'pcm_s16le',
         channels: 1,
-        sampleRate: 16000,
+        sampleRate: '16000',
         bitrate: '256000',
+        duration: '12.312000',
       },
     ]);
 
@@ -188,8 +191,9 @@ describe('audio', () => {
       {
         codec: 'pcm_s16le',
         channels: 1,
-        sampleRate: 16000,
+        sampleRate: '16000',
         bitrate: '256000',
+        duration: '12.312000',
       },
     ]);
 

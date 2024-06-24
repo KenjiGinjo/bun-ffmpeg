@@ -9,8 +9,9 @@ describe('audio-info', () => {
       {
         codec: 'mp3',
         channels: 1,
-        sampleRate: 24000,
+        sampleRate: '24000',
         bitrate: '160000',
+        duration: '12.312000',
       },
     ]);
   });

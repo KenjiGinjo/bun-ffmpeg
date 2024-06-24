@@ -18,5 +18,6 @@ export interface FfmpegAudioInfo {
   codec: string;
   bitrate: string;
   channels: number;
-  sampleRate: number;
+  sampleRate: string;
+  duration: string;
 }
