@@ -12,6 +12,6 @@ export const audioArgs = (options?: FfmpegAudioOptions) => {
     ...(bitrate ? ['-b:a', bitrate] : []),
     ...(channels ? ['-ac', channels.toString()] : []),
     ...(sampleRate ? ['-ar', sampleRate.toString()] : []),
-    ...(quality ? ['-q:a', quality] : []),
+    ...(quality ? ['-q:a', quality.toString()] : []),
   ];
 };
