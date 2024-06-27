@@ -2,6 +2,8 @@
 
 `bun-ffmpeg` is an audio processing library based on FFmpeg, built with Bun, designed to simplify audio encoding and processing workflows.
 
+_For now Audio Processing Only_
+
 ## Features
 
 - **Audio Encoding**: Supports audio codecs such as `aac`, `mp3`, and `pcm_s16le`.
