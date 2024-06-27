@@ -11,4 +11,8 @@ export default [
     },
   },
   ...ESLINT.ts,
+
+  {
+    files: ['src/**/*.ts'],
+  },
 ];
