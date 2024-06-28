@@ -15,7 +15,7 @@ _For now Audio Processing Only_
 Install `bun-ffmpeg` using npm:
 
 ```bash
-npm install bun-ffmpeg --save-dev
+bun add bun-ffmpeg -D
 ```
 
 ## Usage
