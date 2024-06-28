@@ -1,10 +1,10 @@
-import { describe, expect, it } from 'bun:test';
-import { unlink } from 'node:fs/promises';
-import { audio, audioWithStreamInput, audioWithStreamInputAndOut, audioWithStreamOut } from './audio';
-import { audioInfo } from './audio-info';
+import { unlink } from 'node:fs/promises'
+import { describe, expect, it } from 'bun:test'
+import { audio, audioWithStreamInput, audioWithStreamInputAndOut, audioWithStreamOut } from './audio'
+import { audioInfo } from './audio-info'
 
-const input = `${import.meta.dir}/samples/input.mp3`;
-const output = `${import.meta.dir}/samples/output.wav`;
+const input = `${import.meta.dir}/samples/input.mp3`
+const output = `${import.meta.dir}/samples/output.wav`
 
 describe('audio', () => {
   it('should throw an error if the input is not a correct path', async () => {
@@ -16,11 +16,11 @@ describe('audio', () => {
           sampleRate: 16000,
           bitrate: '160k',
           onError: (error) => {
-            throw error;
+            throw error
           },
         }),
-    ).toThrowError();
-  });
+    ).toThrowError()
+  })
 
   it('audio: normal test ', async () => {
     await audio(input, output, {
@@ -28,11 +28,11 @@ describe('audio', () => {
       channels: 1,
       sampleRate: 16000,
       bitrate: '160k',
-    });
+    })
 
-    expect(await Bun.file(output).exists()).toBeTrue();
+    expect(await Bun.file(output).exists()).toBeTrue()
 
-    const result = await audioInfo(output);
+    const result = await audioInfo(output)
 
     expect(result).toEqual([
       {
@@ -42,26 +42,26 @@ describe('audio', () => {
         bitrate: '256000',
         duration: '12.312000',
       },
-    ]);
+    ])
 
-    await unlink(output);
-  });
+    await unlink(output)
+  })
 
   it('audioWithStreamInput: normal test ', async () => {
-    const file = Bun.file(input);
-    const stream = file.stream();
+    const file = Bun.file(input)
+    const stream = file.stream()
 
     await audioWithStreamInput(stream, output, {
       codec: 'pcm_s16le',
       bitrate: '128k',
       channels: 1,
       sampleRate: 16000,
-    });
+    })
 
-    expect(await Bun.file(output).exists()).toBeTrue();
+    expect(await Bun.file(output).exists()).toBeTrue()
 
-    await unlink(output);
-  });
+    await unlink(output)
+  })
 
   it('audioWithStreamOut: normal test ', async () => {
     const fileWritePromise = new Promise<void>((resolve) => {
@@ -70,8 +70,8 @@ describe('audio', () => {
         {
           onProcessDataFlushed: () => {},
           onProcessDataEnd: async (data) => {
-            await Bun.write(output, data!);
-            resolve();
+            await Bun.write(output, data!)
+            resolve()
           },
         },
         {
@@ -80,14 +80,14 @@ describe('audio', () => {
           channels: 1,
           sampleRate: 16000,
         },
-      );
-    });
+      )
+    })
 
-    await fileWritePromise;
+    await fileWritePromise
 
-    expect(await Bun.file(output).exists()).toBeTrue();
+    expect(await Bun.file(output).exists()).toBeTrue()
 
-    const result = await audioInfo(output);
+    const result = await audioInfo(output)
     expect(result).toEqual([
       {
         codec: 'pcm_s16le',
@@ -96,14 +96,14 @@ describe('audio', () => {
         bitrate: '256000',
         duration: '12.312000',
       },
-    ]);
+    ])
 
-    await unlink(output);
-  });
+    await unlink(output)
+  })
 
   it('audioWithStreamInputAndOut: normal test', async () => {
-    const file = Bun.file(input);
-    const stream = file.stream();
+    const file = Bun.file(input)
+    const stream = file.stream()
 
     const fileWritePromise = new Promise<void>((resolve) => {
       audioWithStreamInputAndOut(
@@ -111,8 +111,8 @@ describe('audio', () => {
         {
           onProcessDataFlushed: () => {},
           onProcessDataEnd: async (data) => {
-            await Bun.write(output, data!);
-            resolve();
+            await Bun.write(output, data!)
+            resolve()
           },
         },
         {
@@ -121,14 +121,14 @@ describe('audio', () => {
           channels: 1,
           sampleRate: 16000,
         },
-      );
-    });
+      )
+    })
 
-    await fileWritePromise;
+    await fileWritePromise
 
-    expect(await Bun.file(output).exists()).toBeTrue();
+    expect(await Bun.file(output).exists()).toBeTrue()
 
-    const result = await audioInfo(output);
+    const result = await audioInfo(output)
     expect(result).toEqual([
       {
         codec: 'pcm_s16le',
@@ -137,30 +137,31 @@ describe('audio', () => {
         bitrate: '256000',
         duration: '12.312000',
       },
-    ]);
+    ])
 
-    await unlink(output);
-  });
+    await unlink(output)
+  })
 
   it('audioWithStreamInputAndOut: chunks', async () => {
-    const file = Bun.file(input);
-    const stream = file.stream();
+    const file = Bun.file(input)
+    const stream = file.stream()
 
-    const { readable, writable } = new TransformStream();
-    const reader = stream.getReader();
+    const { readable, writable } = new TransformStream()
+    const reader = stream.getReader()
     try {
       while (true) {
-        const { done, value } = await reader.read();
-        const writer = writable.getWriter();
+        const { done, value } = await reader.read()
+        const writer = writable.getWriter()
         if (done) {
-          writer.close();
-          break;
+          writer.close()
+          break
         }
-        writer.write(value);
-        writer.releaseLock();
+        writer.write(value)
+        writer.releaseLock()
       }
-    } finally {
-      reader.releaseLock();
+    }
+    finally {
+      reader.releaseLock()
     }
 
     const fileWritePromise = new Promise<void>((resolve) => {
@@ -169,8 +170,8 @@ describe('audio', () => {
         {
           onProcessDataFlushed: () => {},
           onProcessDataEnd: async (data) => {
-            await Bun.write(output, data!);
-            resolve();
+            await Bun.write(output, data!)
+            resolve()
           },
         },
         {
@@ -179,14 +180,14 @@ describe('audio', () => {
           channels: 1,
           sampleRate: 16000,
         },
-      );
-    });
+      )
+    })
 
-    await fileWritePromise;
+    await fileWritePromise
 
-    expect(await Bun.file(output).exists()).toBeTrue();
+    expect(await Bun.file(output).exists()).toBeTrue()
 
-    const result = await audioInfo(output);
+    const result = await audioInfo(output)
     expect(result).toEqual([
       {
         codec: 'pcm_s16le',
@@ -195,8 +196,8 @@ describe('audio', () => {
         bitrate: '256000',
         duration: '12.312000',
       },
-    ]);
+    ])
 
-    await unlink(output);
-  });
-});
+    await unlink(output)
+  })
+})

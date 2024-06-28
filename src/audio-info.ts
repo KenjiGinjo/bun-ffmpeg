@@ -1,7 +1,7 @@
-import type { FfmpegAudioInfo } from './types';
-import { extractError } from './utils/extract-error';
+import type { FfmpegAudioInfo } from './types'
+import { extractError } from './utils/extract-error'
 
-export const audioInfo = async (filePath: string): Promise<FfmpegAudioInfo[]> => {
+export async function audioInfo(filePath: string): Promise<FfmpegAudioInfo[]> {
   const proc = Bun.spawn(
     [
       'ffprobe',
@@ -16,24 +16,24 @@ export const audioInfo = async (filePath: string): Promise<FfmpegAudioInfo[]> =>
       filePath,
     ],
     { stderr: 'pipe' },
-  );
+  )
 
-  const exitCode = await proc.exited;
+  const exitCode = await proc.exited
 
   if (exitCode !== 0) {
-    const stderr = await Bun.readableStreamToText(proc.stderr);
-    const errors = extractError(stderr);
-    throw new Error(errors);
+    const stderr = await Bun.readableStreamToText(proc.stderr)
+    const errors = extractError(stderr)
+    throw new Error(errors)
   }
 
-  const stdout = (await new Response(proc.stdout).json()) as { streams?: unknown[] };
+  const stdout = (await new Response(proc.stdout).json()) as { streams?: unknown[] }
   const result = stdout?.streams as {
-    codec_name: string;
-    sample_rate: string;
-    channels: number;
-    bit_rate: string;
-    duration: string;
-  }[];
+    codec_name: string
+    sample_rate: string
+    channels: number
+    bit_rate: string
+    duration: string
+  }[]
 
   return result.map((r) => {
     return {
@@ -42,6 +42,6 @@ export const audioInfo = async (filePath: string): Promise<FfmpegAudioInfo[]> =>
       sampleRate: r.sample_rate,
       bitrate: r.bit_rate,
       duration: r.duration,
-    };
-  });
-};
+    }
+  })
+}

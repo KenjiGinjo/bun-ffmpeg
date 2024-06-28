@@ -1,11 +1,11 @@
-import type { FfmpegAudioOptions } from './types';
+import type { FfmpegAudioOptions } from './types'
 
-export const audioArgs = (options?: FfmpegAudioOptions) => {
+export function audioArgs(options?: FfmpegAudioOptions) {
   if (!options) {
-    return [];
+    return []
   }
 
-  const { codec, bitrate, channels, sampleRate, quality } = options;
+  const { codec, bitrate, channels, sampleRate, quality } = options
 
   return [
     ...(codec ? ['-acodec', codec] : []),
@@ -13,5 +13,5 @@ export const audioArgs = (options?: FfmpegAudioOptions) => {
     ...(channels ? ['-ac', channels.toString()] : []),
     ...(sampleRate ? ['-ar', sampleRate.toString()] : []),
     ...(quality ? ['-q:a', quality.toString()] : []),
-  ];
-};
+  ]
+}

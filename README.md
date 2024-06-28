@@ -25,17 +25,17 @@ bun add bun-ffmpeg -D
 Import and use the `audio` function to process audio files:
 
 ```typescript
-import { audio } from 'bun-ffmpeg';
+import { audio } from 'bun-ffmpeg'
 
 const options = {
   codec: 'aac',
   bitrate: '192k',
   channels: 2,
   sampleRate: 44100,
-  onError: (error) => console.error('Error processing audio:', error),
-};
+  onError: error => console.error('Error processing audio:', error),
+}
 
-audio('input.mp3', 'output.aac', options);
+audio('input.mp3', 'output.aac', options)
 ```
 
 ### Stream Input
@@ -43,20 +43,20 @@ audio('input.mp3', 'output.aac', options);
 Use the `audioWithStreamInput` function to process audio from a readable stream:
 
 ```typescript
-import { audioWithStreamInput } from 'bun-ffmpeg';
+import { audioWithStreamInput } from 'bun-ffmpeg'
 
 const options = {
   codec: 'mp3',
   bitrate: '128k',
   channels: 2,
   sampleRate: 44100,
-  onError: (error) => console.error('Error processing audio:', error),
-};
+  onError: error => console.error('Error processing audio:', error),
+}
 
 // Example of using a ReadableStream as input
-const inputStream = getReadableStreamSomehow();
+const inputStream = getReadableStreamSomehow()
 
-audioWithStreamInput(inputStream, 'output.mp3', options);
+audioWithStreamInput(inputStream, 'output.mp3', options)
 ```
 
 ### Stream Output
@@ -64,14 +64,14 @@ audioWithStreamInput(inputStream, 'output.mp3', options);
 Use the `audioWithStreamOut` function to process audio and output to a writable stream:
 
 ```typescript
-import { audioWithStreamOut } from 'bun-ffmpeg';
+import { audioWithStreamOut } from 'bun-ffmpeg'
 
 const options = {
   codec: 'pcm_s16le',
   channels: 2,
   sampleRate: 48000,
-  onError: (error) => console.error('Error processing audio:', error),
-};
+  onError: error => console.error('Error processing audio:', error),
+}
 
 const outputHandlers = {
   onProcessDataFlushed: (data) => {
@@ -80,9 +80,9 @@ const outputHandlers = {
   onProcessDataEnd: (data) => {
     // Handle end of data
   },
-};
+}
 
-audioWithStreamOut('input.mp3', outputHandlers, options);
+audioWithStreamOut('input.mp3', outputHandlers, options)
 ```
 
 ### Stream Input and Output
@@ -90,17 +90,17 @@ audioWithStreamOut('input.mp3', outputHandlers, options);
 Use the `audioWithStreamInputAndOut` function to process audio from a readable stream and output to a writable stream:
 
 ```typescript
-import { audioWithStreamInputAndOut } from 'bun-ffmpeg';
+import { audioWithStreamInputAndOut } from 'bun-ffmpeg'
 
 const options = {
   codec: 'aac',
   bitrate: '256k',
   channels: 5.1,
   sampleRate: 44100,
-  onError: (error) => console.error('Error processing audio:', error),
-};
+  onError: error => console.error('Error processing audio:', error),
+}
 
-const inputStream = getReadableStreamSomehow();
+const inputStream = getReadableStreamSomehow()
 
 const outputHandlers = {
   onProcessDataFlushed: (data) => {
@@ -109,9 +109,9 @@ const outputHandlers = {
   onProcessDataEnd: (data) => {
     // Handle end of data
   },
-};
+}
 
-audioWithStreamInputAndOut(inputStream, outputHandlers, options);
+audioWithStreamInputAndOut(inputStream, outputHandlers, options)
 ```
 
 ## Contributing
