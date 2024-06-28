@@ -23,9 +23,6 @@ jobs:
       - name: Run linter
         run: bun lint
 
-      - name: Format code
-        run: bun format
-
       - name: Typecheck
         run: bun typecheck
 
