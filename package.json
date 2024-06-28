@@ -69,6 +69,9 @@
     "$schema": "https://unpkg.com/release-it/schema/release-it.json",
     "github": {
       "release": true
+    },
+    "git": {
+      "commitMessage": "chore(release): release version ${version}"
     }
   }
 }
