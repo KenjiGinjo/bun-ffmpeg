@@ -61,6 +61,7 @@
     "codestilo": "^0.0.4",
     "codestilo-ts": "0.0.1",
     "commitizen": "^4.3.0",
+    "lint-staged": "^15.2.7",
     "release-it": "^17.4.0",
     "simple-git-hooks": "^2.11.1",
     "typescript": "^5.4.5"
