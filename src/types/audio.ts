@@ -10,10 +10,12 @@ export interface FfmpegAudioOptions {
   quality?: number
   onError?: (error: unknown) => void
 }
+
 export interface FfmpegAudioOptionsWithStreamOut {
-  onProcessDataFlushed: (data: Uint8Array | ArrayBuffer | undefined) => void
+  onProcessDataFlushed?: (data: Uint8Array | ArrayBuffer | undefined) => void
   onProcessDataEnd: (data: Uint8Array | ArrayBuffer | undefined) => void
 }
+
 export interface FfmpegAudioInfo {
   codec: string
   bitrate: string

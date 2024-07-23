@@ -1,6 +1,6 @@
 import { unlink } from 'node:fs/promises'
 import { describe, expect, it } from 'bun:test'
-import { audio, audioWithStreamInput, audioWithStreamInputAndOut, audioWithStreamOut } from './audio'
+import { audio, audioWav, audioWithStreamInput, audioWithStreamInputAndOut, audioWithStreamOut } from './audio'
 import { audioInfo } from './audio-info'
 
 const input = `${import.meta.dir}/samples/input.mp3`
@@ -185,6 +185,26 @@ describe('audio', () => {
 
     await fileWritePromise
 
+    expect(await Bun.file(output).exists()).toBeTrue()
+
+    const result = await audioInfo(output)
+    expect(result).toEqual([
+      {
+        codec: 'pcm_s16le',
+        channels: 1,
+        sampleRate: '16000',
+        bitrate: '256000',
+        duration: '12.312000',
+      },
+    ])
+
+    await unlink(output)
+  })
+
+  it('audioBuffer', async () => {
+    const arrayBuffer = await Bun.file(input).arrayBuffer()
+    const data = await audioWav(new Uint8Array(arrayBuffer))
+    await Bun.write(output, data!)
     expect(await Bun.file(output).exists()).toBeTrue()
 
     const result = await audioInfo(output)
