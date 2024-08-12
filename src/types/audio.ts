@@ -26,17 +26,7 @@ export interface FfmpegAudioInfo {
   sampleRate: string
   duration: string
   metadata?: {
-    title?: string
-    artist?: string
-    album?: string
-    track?: string
-    date?: string
-    genre?: string
-    composer?: string
-    comment?: string
-    year?: string
-    encoder?: string
-    [key: string]: string | undefined
+    [key: string]: string
   }
 }
 
