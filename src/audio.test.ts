@@ -5,6 +5,7 @@ import { audioInfo } from './audio-info'
 
 const input = `${import.meta.dir}/samples/input.mp3`
 const output = `${import.meta.dir}/samples/output.wav`
+const outputMp3 = `${import.meta.dir}/samples/output.mp3`
 
 describe('audio', () => {
   it('should throw an error if the input is not a correct path', async () => {
@@ -45,6 +46,54 @@ describe('audio', () => {
     ])
 
     await unlink(output)
+  })
+
+  it('audio: normal test with id3 metadata', async () => {
+    await audio(input, outputMp3, {
+      codec: 'mp3',
+      bitrate: '192k',
+      channels: 2,
+      sampleRate: 44100,
+      metadata: {
+        title: 'track title',
+        artist: 'track artist',
+        album: 'track album',
+        comment: 'track comment',
+        genre: 'track genre',
+        year: '2024',
+        track: '1',
+        composer: 'track composer',
+      },
+    })
+
+    expect(await Bun.file(outputMp3).exists()).toBeTrue()
+
+    const result = await audioInfo(outputMp3, {
+      metadataTags: ['title', 'artist', 'album', 'track', 'genre', 'composer', 'comment', 'year', 'encoder'],
+    })
+
+    expect(result).toEqual([
+      {
+        codec: 'mp3',
+        channels: 2,
+        sampleRate: '44100',
+        bitrate: '192000',
+        duration: '12.355918',
+        metadata: {
+          title: 'track title',
+          artist: 'track artist',
+          album: 'track album',
+          track: '1',
+          genre: 'track genre',
+          composer: 'track composer',
+          comment: 'track comment',
+          year: '2024',
+          encoder: 'Lavf61.1.100',
+        },
+      },
+    ])
+
+    await unlink(outputMp3)
   })
 
   it('audioWithStreamInput: normal test ', async () => {
