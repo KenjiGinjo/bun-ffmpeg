@@ -54,6 +54,7 @@
     "acodec",
     "antfu",
     "commitlint",
-    "ffprobe"
+    "ffprobe",
+    "Lavf"
   ]
 }

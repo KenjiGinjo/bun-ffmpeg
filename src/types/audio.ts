@@ -8,6 +8,9 @@ export interface FfmpegAudioOptions {
   channels?: 1 | 2 | 5.1 | 7.1 | number
   sampleRate?: 8000 | 16000 | 44100 | 48000 | number
   quality?: number
+  metadata?: {
+    [key: string]: string
+  }
   onError?: (error: unknown) => void
 }
 
@@ -22,4 +25,11 @@ export interface FfmpegAudioInfo {
   channels: number
   sampleRate: string
   duration: string
+  metadata?: {
+    [key: string]: string
+  }
+}
+
+export interface AudioInfoOptions {
+  metadataTags?: string[]
 }
