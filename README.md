@@ -12,10 +12,8 @@ _For now Audio Processing Only_
 
 ## Installation
 
-Install `bun-ffmpeg` using npm:
-
 ```bash
-bun add bun-ffmpeg -D
+bun add bun-ffmpeg
 ```
 
 ## Usage
@@ -35,7 +33,7 @@ const options = {
   onError: error => console.error('Error processing audio:', error),
 }
 
-audio('input.mp3', 'output.aac', options)
+await audio('input.mp3', 'output.aac', options)
 ```
 
 ### Stream Input
@@ -56,7 +54,7 @@ const options = {
 // Example of using a ReadableStream as input
 const inputStream = getReadableStreamSomehow()
 
-audioWithStreamInput(inputStream, 'output.mp3', options)
+await audioWithStreamInput(inputStream, 'output.mp3', options)
 ```
 
 ### Stream Output
@@ -113,6 +111,8 @@ const outputHandlers = {
 
 audioWithStreamInputAndOut(inputStream, outputHandlers, options)
 ```
+
+see more examples in the [audio.test.ts](/src/audio.test.ts)
 
 ## Contributing
 
