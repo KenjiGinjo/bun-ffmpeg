@@ -71,7 +71,7 @@ describe('audio', () => {
     expect(await Bun.file(output.mp3).exists()).toBeTrue()
 
     const result = await audioInfo(output.mp3, {
-      metadataTags: ['title', 'artist', 'album', 'track', 'genre', 'composer', 'comment', 'year'],
+      metadataTags: ['title', 'artist', 'album', 'track', 'genre', 'composer', 'comment', 'year', 'encoder'],
     })
 
     expect(result).toMatchObject([
