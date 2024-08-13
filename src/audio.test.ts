@@ -74,7 +74,7 @@ describe('audio', () => {
       metadataTags: ['title', 'artist', 'album', 'track', 'genre', 'composer', 'comment', 'year', 'encoder'],
     })
 
-    expect(result).toEqual([
+    expect(result).toMatchObject([
       {
         codec: 'mp3',
         channels: 2,
@@ -90,10 +90,13 @@ describe('audio', () => {
           composer: 'track composer',
           comment: 'track comment',
           year: '2024',
-          encoder: 'Lavf61.1.100',
         },
       },
     ])
+
+    // This could be different in different environments
+    // eslint-disable-next-line dot-notation
+    expect(result[0].metadata?.['encoder']!).toMatch(/Lavf\d+\.\d+\.\d+/)
 
     await unlink(output.mp3)
   })
