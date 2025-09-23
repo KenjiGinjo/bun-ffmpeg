@@ -1,2 +1,6 @@
 export * from './audio'
 export * from './audio-info'
+export * from './types'
+export { createFfmpegCommand, createFfprobeCommand } from './utils/command-builder'
+export { FfmpegError, FfmpegTimeoutError, handleFfmpegError, withErrorHandling } from './utils/error-handler'
+export { FFMPEG_CONFIG, DEFAULT_AUDIO_OPTIONS, ERROR_MESSAGES } from './config/constants'

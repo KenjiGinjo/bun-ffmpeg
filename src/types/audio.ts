@@ -1,16 +1,17 @@
+export type SupportedCodec = 'aac' | 'mp3' | 'pcm_s16le' | 'flac' | 'ogg' | 'wav'
+export type SupportedChannels = 1 | 2 | 5.1 | 7.1
+export type SupportedSampleRate = 8000 | 16000 | 22050 | 44100 | 48000 | 96000
+
 export interface FfmpegAudioOptions {
-  codec?: 'aac' | 'mp3' | 'pcm_s16le' | string
+  codec?: SupportedCodec | string
   /**
-   * The bitrate for the audio encoding.
-   * @example "192k"
+   * @example "192k", "128000"
    */
   bitrate?: string
-  channels?: 1 | 2 | 5.1 | 7.1 | number
-  sampleRate?: 8000 | 16000 | 44100 | 48000 | number
+  channels?: SupportedChannels | number
+  sampleRate?: SupportedSampleRate | number
   quality?: number
-  metadata?: {
-    [key: string]: string
-  }
+  metadata?: Record<string, string>
   onError?: (error: unknown) => void
 }
 
@@ -25,9 +26,7 @@ export interface FfmpegAudioInfo {
   channels: number
   sampleRate: string
   duration: string
-  metadata?: {
-    [key: string]: string
-  }
+  metadata?: Record<string, string>
 }
 
 export interface AudioInfoOptions {

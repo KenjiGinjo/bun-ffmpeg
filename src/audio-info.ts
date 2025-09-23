@@ -1,32 +1,32 @@
 import type { AudioInfoOptions, FfmpegAudioInfo } from './types'
-import { extractError } from './utils/extract-error'
+import { handleFfmpegError } from './utils/error-handler'
+import { FFMPEG_CONFIG } from './config/constants'
 
 export async function audioInfo(filePath: string, options?: AudioInfoOptions): Promise<FfmpegAudioInfo[]> {
   const metadataTags = options?.metadataTags || []
   const metadataEntries = metadataTags.length > 0 ? ['-show_entries', `format_tags=${metadataTags.join(',')}`] : []
-  const proc = Bun.spawn(
-    [
-      'ffprobe',
-      '-v',
-      'error',
-      '-select_streams',
-      'a:0',
-      '-show_entries',
-      'stream=codec_name,channels,sample_rate,bit_rate,duration',
-      ...metadataEntries,
-      '-of',
-      'json',
-      filePath,
-    ],
-    { stderr: 'pipe' },
-  )
+
+  const command = [
+    FFMPEG_CONFIG.FFPROBE_BINARY,
+    '-v',
+    'error',
+    '-select_streams',
+    'a:0',
+    '-show_entries',
+    'stream=codec_name,channels,sample_rate,bit_rate,duration',
+    ...metadataEntries,
+    '-of',
+    'json',
+    filePath,
+  ]
+
+  const proc = Bun.spawn(command, { stderr: 'pipe' })
 
   const exitCode = await proc.exited
 
   if (exitCode !== 0) {
     const stderr = await Bun.readableStreamToText(proc.stderr)
-    const errors = extractError(stderr)
-    throw new Error(errors)
+    throw handleFfmpegError(new Error('FFprobe process failed'), stderr, exitCode)
   }
 
   const stdout = (await new Response(proc.stdout).json()) as { streams?: unknown[], format?: { tags?: Record<string, string> } }

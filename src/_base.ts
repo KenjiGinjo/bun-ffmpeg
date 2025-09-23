@@ -1,7 +1,16 @@
 import type { FfmpegAudioOptionsWithStreamOut } from './types'
-import { extractError } from './utils/extract-error'
+import { FFMPEG_CONFIG } from './config/constants'
+import { FfmpegTimeoutError, handleFfmpegError } from './utils/error-handler'
 
-export async function _spawn({ args, input, output }: { args: string[], input?: ReadableStream<Uint8Array>, output?: FfmpegAudioOptionsWithStreamOut }) {
+export async function executeFfmpegWithStreams({
+  args,
+  input,
+  output,
+}: {
+  args: string[]
+  input?: ReadableStream<Uint8Array>
+  output?: FfmpegAudioOptionsWithStreamOut
+}): Promise<Uint8Array | undefined> {
   const proc = Bun.spawn(args, {
     stderr: 'pipe',
     stdin: 'pipe',
@@ -62,16 +71,21 @@ export async function _spawn({ args, input, output }: { args: string[], input?: 
   const exitCode = await proc.exited
   if (exitCode !== 0) {
     const stderr = await Bun.readableStreamToText(proc.stderr)
-    const errors = extractError(stderr)
-    throw new Error(errors)
+    throw handleFfmpegError(new Error('FFmpeg process failed'), stderr, exitCode)
   }
 
-  if (finalData) {
-    return finalData
-  }
+  return finalData
 }
 
-export async function _spawnBuffer({ args, input, timeout = 30000 }: { args: string[], input: Uint8Array, timeout?: number }) {
+export async function executeFfmpegWithBuffer({
+  args,
+  input,
+  timeout = FFMPEG_CONFIG.DEFAULT_TIMEOUT,
+}: {
+  args: string[]
+  input: Uint8Array
+  timeout?: number
+}): Promise<Uint8Array> {
   return new Promise<Uint8Array>((resolve, reject) => {
     const proc = Bun.spawn(args, {
       stdin: 'pipe',
@@ -84,10 +98,10 @@ export async function _spawnBuffer({ args, input, timeout = 30000 }: { args: str
     const sink = new Bun.ArrayBufferSink()
     sink.start({ asUint8Array: true })
 
-    const timeoutPromise = new Promise((_, reject) => {
+    const timeoutPromise = new Promise<never>((_, reject) => {
       setTimeout(() => {
         proc.kill()
-        reject(new Error('Process timed out'))
+        reject(new FfmpegTimeoutError(timeout))
       }, timeout)
     });
 
@@ -102,8 +116,7 @@ export async function _spawnBuffer({ args, input, timeout = 30000 }: { args: str
             const signalCode = proc.signalCode
             if (exitCode !== 0 || signalCode !== null) {
               const stderr = await Bun.readableStreamToText(proc.stderr)
-              const errors = extractError(stderr)
-              throw new Error(`Process exited with code ${exitCode}, signal ${signalCode}. Errors: ${errors}`)
+              throw handleFfmpegError(new Error('FFmpeg process failed'), stderr, exitCode, signalCode as number | null)
             }
             resolve(sink.end() as Uint8Array)
           })(),
@@ -112,7 +125,7 @@ export async function _spawnBuffer({ args, input, timeout = 30000 }: { args: str
       }
       catch (error) {
         proc.kill()
-        reject(error)
+        reject(handleFfmpegError(error))
       }
     })()
   })
