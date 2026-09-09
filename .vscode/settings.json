@@ -56,5 +56,6 @@
     "commitlint",
     "ffprobe",
     "Lavf"
-  ]
+  ],
+  "js/ts.experimental.useTsgo": false
 }

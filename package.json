@@ -2,19 +2,29 @@
   "name": "bun-ffmpeg",
   "type": "module",
   "version": "0.2.2",
-  "description": "API to FFMPEG (http://www.ffmpeg.org)",
+  "description": "Bun-native FFmpeg wrapper for audio encoding, streaming, and Whisper-ready WAV",
   "license": "MIT",
+  "homepage": "https://github.com/KenjiGinjo/bun-ffmpeg#readme",
   "repository": {
     "type": "git",
-    "url": "git://github.com/KenjiGinjo/bun-ffmpeg.git"
+    "url": "git+https://github.com/KenjiGinjo/bun-ffmpeg.git"
   },
   "bugs": {
     "url": "https://github.com/KenjiGinjo/bun-ffmpeg/issues",
-    "mail": "kenjiginjo@gmail.com"
+    "email": "kenjiginjo@gmail.com"
   },
   "keywords": [
     "ffmpeg",
-    "bun"
+    "bun",
+    "audio",
+    "encoding",
+    "transcode",
+    "whisper",
+    "aac",
+    "mp3",
+    "wav",
+    "stream",
+    "typescript"
   ],
   "exports": {
     ".": "./src/index.ts"
@@ -26,6 +36,9 @@
     "src",
     "tsconfig.json"
   ],
+  "engines": {
+    "bun": ">=1.1.0"
+  },
   "scripts": {
     "commit": "cz",
     "lint": "eslint .",

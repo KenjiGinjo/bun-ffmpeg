@@ -5,6 +5,8 @@ import { FFMPEG_CONFIG } from '../config/constants'
 export class FfmpegCommandBuilder {
   private args: string[] = []
 
+  constructor(private readonly binary: string = FFMPEG_CONFIG.FFMPEG_BINARY) {}
+
   input(input: string): this {
     this.args.push('-i', input)
     return this
@@ -36,7 +38,7 @@ export class FfmpegCommandBuilder {
   }
 
   build(): string[] {
-    return [FFMPEG_CONFIG.FFMPEG_BINARY, ...this.args]
+    return [this.binary, ...this.args]
   }
 
   reset(): this {
@@ -50,5 +52,5 @@ export function createFfmpegCommand(): FfmpegCommandBuilder {
 }
 
 export function createFfprobeCommand(): FfmpegCommandBuilder {
-  return new FfmpegCommandBuilder().customArgs([FFMPEG_CONFIG.FFPROBE_BINARY])
+  return new FfmpegCommandBuilder(FFMPEG_CONFIG.FFPROBE_BINARY)
 }
