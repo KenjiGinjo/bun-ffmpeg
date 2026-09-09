@@ -21,6 +21,13 @@ ffprobe -version
 
 macOS: `brew install ffmpeg` · Debian/Ubuntu: `sudo apt install ffmpeg` · Windows: [ffmpeg.org](https://ffmpeg.org/download.html)
 
+Override the binaries when they are not on `PATH`:
+
+```bash
+export FFMPEG_PATH=/usr/local/bin/ffmpeg
+export FFPROBE_PATH=/usr/local/bin/ffprobe
+```
+
 ## Install
 
 ```bash
@@ -175,7 +182,7 @@ Runnable examples: [`examples/whisper-prep.ts`](examples/whisper-prep.ts), [`exa
 
 `FfmpegAudioOptions`: `codec`, `bitrate`, `channels`, `sampleRate`, `quality`, `format`, `metadata`, `onError`.
 
-Errors are `FfmpegError` / `FfmpegTimeoutError` (buffer path defaults to 30s).
+Errors are `FfmpegError` / `FfmpegNotFoundError` / `FfmpegTimeoutError` (buffer path defaults to 30s). Missing binaries tell you how to install FFmpeg or set `FFMPEG_PATH` / `FFPROBE_PATH`.
 
 ## Contributing
 

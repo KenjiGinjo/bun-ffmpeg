@@ -1,4 +1,4 @@
-import { ERROR_MESSAGES } from '../config/constants'
+import { ERROR_MESSAGES, ffmpegNotFoundMessage } from '../config/constants'
 import { extractError } from './extract-error'
 
 export class FfmpegError extends Error {
@@ -13,11 +13,44 @@ export class FfmpegError extends Error {
   }
 }
 
+export class FfmpegNotFoundError extends FfmpegError {
+  constructor(public readonly binary: string) {
+    super(ffmpegNotFoundMessage(binary))
+    this.name = 'FfmpegNotFoundError'
+  }
+}
+
 export class FfmpegTimeoutError extends Error {
   constructor(timeout: number) {
     super(`${ERROR_MESSAGES.PROCESS_TIMEOUT} after ${timeout}ms`)
     this.name = 'FfmpegTimeoutError'
   }
+}
+
+export function isBinaryNotFoundError(error: unknown, exitCode?: number): boolean {
+  if (exitCode === 127)
+    return true
+
+  if (!error || typeof error !== 'object')
+    return false
+
+  const code = 'code' in error ? error.code : undefined
+  const message = 'message' in error && typeof error.message === 'string' ? error.message : ''
+
+  return code === 'ENOENT' || /not found in \$PATH/i.test(message)
+}
+
+function binaryFromError(error: unknown, fallback: string): string {
+  if (error && typeof error === 'object' && 'path' in error && typeof error.path === 'string' && error.path)
+    return error.path
+
+  if (error && typeof error === 'object' && 'message' in error && typeof error.message === 'string') {
+    const quoted = error.message.match(/"([^"]+)"/)
+    if (quoted?.[1])
+      return quoted[1]
+  }
+
+  return fallback
 }
 
 export function handleFfmpegError(
@@ -32,6 +65,10 @@ export function handleFfmpegError(
 
   if (error instanceof FfmpegTimeoutError) {
     return error
+  }
+
+  if (isBinaryNotFoundError(error, exitCode)) {
+    return new FfmpegNotFoundError(binaryFromError(error, 'ffmpeg'))
   }
 
   let message: string = ERROR_MESSAGES.PROCESS_EXIT_ERROR

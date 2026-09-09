@@ -1,6 +1,7 @@
 import type { FfmpegAudioOptionsWithStreamOut } from './types'
 import { FFMPEG_CONFIG } from './config/constants'
 import { FfmpegTimeoutError, handleFfmpegError } from './utils/error-handler'
+import { withSpawnError } from './utils/spawn'
 
 export async function executeFfmpegWithStreams({
   args,
@@ -11,11 +12,11 @@ export async function executeFfmpegWithStreams({
   input?: ReadableStream<Uint8Array>
   output?: FfmpegAudioOptionsWithStreamOut
 }): Promise<Uint8Array | undefined> {
-  const proc = Bun.spawn(args, {
+  const proc = withSpawnError(() => Bun.spawn(args, {
     stderr: 'pipe',
     stdin: 'pipe',
     stdout: 'pipe',
-  })
+  }))
 
   let finalData
   const processInput = async () => {
@@ -87,10 +88,10 @@ export async function executeFfmpegWithBuffer({
   timeout?: number
 }): Promise<Uint8Array> {
   return new Promise<Uint8Array>((resolve, reject) => {
-    const proc = Bun.spawn(args, {
+    const proc = withSpawnError(() => Bun.spawn(args, {
       stdin: 'pipe',
       stderr: 'pipe',
-    })
+    }))
 
     proc.stdin.write(input)
     proc.stdin.end()

@@ -1,6 +1,7 @@
 import type { AudioInfoOptions, FfmpegAudioInfo } from './types'
-import { handleFfmpegError } from './utils/error-handler'
 import { createFfprobeCommand } from './utils/command-builder'
+import { handleFfmpegError } from './utils/error-handler'
+import { withSpawnError } from './utils/spawn'
 
 export async function audioInfo(filePath: string, options?: AudioInfoOptions): Promise<FfmpegAudioInfo[]> {
   const metadataTags = options?.metadataTags || []
@@ -21,7 +22,7 @@ export async function audioInfo(filePath: string, options?: AudioInfoOptions): P
     ])
     .build()
 
-  const proc = Bun.spawn(command, { stderr: 'pipe' })
+  const proc = withSpawnError(() => Bun.spawn(command, { stderr: 'pipe' }))
 
   const exitCode = await proc.exited
 

@@ -2,6 +2,7 @@ import { unlink } from 'node:fs/promises'
 import { describe, expect, it } from 'bun:test'
 import { audio, audioWav, audioWithStreamInput, audioWithStreamInputAndOut, audioWithStreamOut } from './audio'
 import { audioInfo } from './audio-info'
+import { FfmpegNotFoundError } from './utils/error-handler'
 
 const input = `${import.meta.dir}/samples/input.mp3`
 const output = {
@@ -301,5 +302,20 @@ describe('audio', () => {
     ])
 
     await unlink(output.wav)
+  })
+
+  it('throws FfmpegNotFoundError when ffmpeg is missing', async () => {
+    const key = 'FFMPEG_PATH'
+    const previous = Bun.env[key]
+    Bun.env[key] = '/definitely/missing/bun-ffmpeg-ffmpeg'
+    try {
+      await expect(audio(input, output.wav)).rejects.toBeInstanceOf(FfmpegNotFoundError)
+    }
+    finally {
+      if (previous === undefined)
+        delete Bun.env[key]
+      else
+        Bun.env[key] = previous
+    }
   })
 })

@@ -1,11 +1,11 @@
 import type { FfmpegAudioOptions } from '../types'
 import { audioArgs } from '../audio-args'
-import { FFMPEG_CONFIG } from '../config/constants'
+import { resolveFfmpegBinary, resolveFfprobeBinary } from '../config/constants'
 
 export class FfmpegCommandBuilder {
   private args: string[] = []
 
-  constructor(private readonly binary: string = FFMPEG_CONFIG.FFMPEG_BINARY) {}
+  constructor(private readonly binary: string = resolveFfmpegBinary()) {}
 
   input(input: string): this {
     this.args.push('-i', input)
@@ -52,5 +52,5 @@ export function createFfmpegCommand(): FfmpegCommandBuilder {
 }
 
 export function createFfprobeCommand(): FfmpegCommandBuilder {
-  return new FfmpegCommandBuilder(FFMPEG_CONFIG.FFPROBE_BINARY)
+  return new FfmpegCommandBuilder(resolveFfprobeBinary())
 }
