@@ -1,7 +1,7 @@
 {
   "name": "bun-ffmpeg",
   "type": "module",
-  "version": "0.2.3",
+  "version": "0.3.0",
   "description": "Bun-native FFmpeg wrapper for audio encoding, streaming, and Whisper-ready WAV",
   "license": "MIT",
   "homepage": "https://github.com/KenjiGinjo/bun-ffmpeg#readme",
