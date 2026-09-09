@@ -22,4 +22,14 @@ describe('command-builder', () => {
     expect(args).not.toContain('ffmpeg')
     expect(args).toEqual(['ffprobe', '-v', 'error', '-show_format', 'in.mp3'])
   })
+
+  it('adds -f for stream muxer format', () => {
+    const args = createFfmpegCommand()
+      .input('in.mp3')
+      .format('mp3')
+      .output('pipe:1')
+      .build()
+
+    expect(args).toEqual(['ffmpeg', '-i', 'in.mp3', '-f', 'mp3', 'pipe:1'])
+  })
 })

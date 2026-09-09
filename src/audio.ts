@@ -40,7 +40,7 @@ export async function audioWithStreamOut(input: string, output: FfmpegAudioOptio
   const command = createFfmpegCommand()
     .input(input)
     .audioOptions(options)
-    .format(FFMPEG_CONFIG.DEFAULT_AUDIO_FORMAT)
+    .format(options?.format ?? FFMPEG_CONFIG.DEFAULT_AUDIO_FORMAT)
     .output(FFMPEG_CONFIG.PIPE_OUTPUT)
     .build()
 
@@ -56,7 +56,7 @@ export async function audioWithStreamInputAndOut(input: ReadableStream<Uint8Arra
   const command = createFfmpegCommand()
     .input(FFMPEG_CONFIG.PIPE_INPUT)
     .audioOptions(options)
-    .format(FFMPEG_CONFIG.DEFAULT_AUDIO_FORMAT)
+    .format(options?.format ?? FFMPEG_CONFIG.DEFAULT_AUDIO_FORMAT)
     .output(FFMPEG_CONFIG.PIPE_OUTPUT)
     .build()
 

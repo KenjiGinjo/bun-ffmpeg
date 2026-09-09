@@ -1,0 +1,18 @@
+name: Feature request
+description: An audio-related capability that is missing
+labels: [enhancement]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      placeholder: What are you trying to do in Bun that is awkward today?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposal
+      placeholder: Keep it audio-only unless there is a strong reason not to.
+    validations:
+      required: true

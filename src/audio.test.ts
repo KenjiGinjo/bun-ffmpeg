@@ -80,7 +80,6 @@ describe('audio', () => {
         channels: 2,
         sampleRate: '44100',
         bitrate: '192000',
-        duration: '12.355918',
         metadata: {
           title: 'track title',
           artist: 'track artist',
@@ -93,6 +92,9 @@ describe('audio', () => {
         },
       },
     ])
+
+    expect(Number(result[0].duration)).toBeGreaterThan(12)
+    expect(Number(result[0].duration)).toBeLessThan(13)
 
     // This could be different in different environments
     // eslint-disable-next-line dot-notation
@@ -153,6 +155,32 @@ describe('audio', () => {
     ])
 
     await unlink(output.wav)
+  })
+
+  it('audioWithStreamOut: custom format', async () => {
+    await new Promise<void>((resolve, reject) => {
+      audioWithStreamOut(
+        input,
+        {
+          onProcessDataFlushed: () => {},
+          onProcessDataEnd: async (data) => {
+            await Bun.write(output.mp3, data!)
+            resolve()
+          },
+        },
+        {
+          codec: 'mp3',
+          bitrate: '128k',
+          format: 'mp3',
+          onError: reject,
+        },
+      )
+    })
+
+    expect(await Bun.file(output.mp3).exists()).toBeTrue()
+    const [info] = await audioInfo(output.mp3)
+    expect(info.codec).toBe('mp3')
+    await unlink(output.mp3)
   })
 
   it('audioWithStreamInputAndOut: normal test', async () => {

@@ -11,6 +11,11 @@ export interface FfmpegAudioOptions {
   channels?: SupportedChannels | number
   sampleRate?: SupportedSampleRate | number
   quality?: number
+  /**
+   * Muxer for stream output (`-f`). File outputs infer this from the path.
+   * @default "wav"
+   */
+  format?: string
   metadata?: Record<string, string>
   onError?: (error: unknown) => void
 }

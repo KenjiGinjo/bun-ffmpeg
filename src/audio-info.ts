@@ -1,24 +1,25 @@
 import type { AudioInfoOptions, FfmpegAudioInfo } from './types'
 import { handleFfmpegError } from './utils/error-handler'
-import { FFMPEG_CONFIG } from './config/constants'
+import { createFfprobeCommand } from './utils/command-builder'
 
 export async function audioInfo(filePath: string, options?: AudioInfoOptions): Promise<FfmpegAudioInfo[]> {
   const metadataTags = options?.metadataTags || []
   const metadataEntries = metadataTags.length > 0 ? ['-show_entries', `format_tags=${metadataTags.join(',')}`] : []
 
-  const command = [
-    FFMPEG_CONFIG.FFPROBE_BINARY,
-    '-v',
-    'error',
-    '-select_streams',
-    'a:0',
-    '-show_entries',
-    'stream=codec_name,channels,sample_rate,bit_rate,duration',
-    ...metadataEntries,
-    '-of',
-    'json',
-    filePath,
-  ]
+  const command = createFfprobeCommand()
+    .customArgs([
+      '-v',
+      'error',
+      '-select_streams',
+      'a:0',
+      '-show_entries',
+      'stream=codec_name,channels,sample_rate,bit_rate,duration',
+      ...metadataEntries,
+      '-of',
+      'json',
+      filePath,
+    ])
+    .build()
 
   const proc = Bun.spawn(command, { stderr: 'pipe' })
 

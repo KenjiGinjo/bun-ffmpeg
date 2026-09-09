@@ -1,0 +1,24 @@
+name: Bug report
+description: Something does not work as expected
+labels: [bug]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+      placeholder: What you ran, what you expected, what you got.
+    validations:
+      required: true
+  - type: input
+    id: versions
+    attributes:
+      label: Versions
+      placeholder: bun-ffmpeg 0.2.2, Bun 1.2.x, ffmpeg 7.x, OS
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs
+      render: text
+      placeholder: FFmpeg stderr / stack trace

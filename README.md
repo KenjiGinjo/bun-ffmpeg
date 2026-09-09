@@ -108,7 +108,7 @@ await audioWithStreamInput(Bun.file('input.mp3').stream(), 'output.mp3', {
 
 ### Stream output
 
-Stream APIs currently emit WAV on stdout (`-f wav`). Collect chunks or wait for the full buffer:
+Stream APIs write to stdout and need an explicit muxer. Default is WAV; pass `format` to change it:
 
 ```typescript
 import { audioWithStreamOut } from 'bun-ffmpeg'
@@ -120,14 +120,14 @@ await new Promise<void>((resolve, reject) => {
       onProcessDataFlushed: () => {},
       onProcessDataEnd: async (data) => {
         if (data)
-          await Bun.write('output.wav', data)
+          await Bun.write('output.mp3', data)
         resolve()
       },
     },
     {
-      codec: 'pcm_s16le',
-      channels: 1,
-      sampleRate: 16000,
+      codec: 'mp3',
+      bitrate: '128k',
+      format: 'mp3',
       onError: reject,
     },
   )
@@ -160,7 +160,7 @@ await new Promise<void>((resolve, reject) => {
 })
 ```
 
-Runnable STT helper: [`examples/whisper-prep.ts`](examples/whisper-prep.ts). More cases in [`src/audio.test.ts`](src/audio.test.ts).
+Runnable examples: [`examples/whisper-prep.ts`](examples/whisper-prep.ts), [`examples/transcode.ts`](examples/transcode.ts). More cases in [`src/audio.test.ts`](src/audio.test.ts).
 
 ## API
 
@@ -170,16 +170,16 @@ Runnable STT helper: [`examples/whisper-prep.ts`](examples/whisper-prep.ts). Mor
 | `audioWav(buffer)` | `Uint8Array` | `Uint8Array` (16 kHz mono WAV) |
 | `audioInfo(path, options?)` | file path | stream metadata |
 | `audioWithStreamInput(stream, output, options?)` | `ReadableStream` | file path |
-| `audioWithStreamOut(input, handlers, options?)` | file path | WAV chunks via handlers |
-| `audioWithStreamInputAndOut(stream, handlers, options?)` | `ReadableStream` | WAV chunks via handlers |
+| `audioWithStreamOut(input, handlers, options?)` | file path | chunks via handlers (default WAV, or `options.format`) |
+| `audioWithStreamInputAndOut(stream, handlers, options?)` | `ReadableStream` | chunks via handlers (default WAV, or `options.format`) |
 
-`FfmpegAudioOptions`: `codec`, `bitrate`, `channels`, `sampleRate`, `quality`, `metadata`, `onError`.
+`FfmpegAudioOptions`: `codec`, `bitrate`, `channels`, `sampleRate`, `quality`, `format`, `metadata`, `onError`.
 
 Errors are `FfmpegError` / `FfmpegTimeoutError` (buffer path defaults to 30s).
 
 ## Contributing
 
-Issues and PRs welcome: [github.com/KenjiGinjo/bun-ffmpeg](https://github.com/KenjiGinjo/bun-ffmpeg).
+See [CONTRIBUTING.md](CONTRIBUTING.md). Issues and PRs: [github.com/KenjiGinjo/bun-ffmpeg](https://github.com/KenjiGinjo/bun-ffmpeg).
 
 ## License
 
